@@ -241,6 +241,12 @@ def make_averaged(original_function, times_called=1000):
     """
     # BEGIN PROBLEM 8
     "*** YOUR CODE HERE ***"
+    def average(*args):
+        count = 0
+        for _ in range(times_called):
+            count += original_function(*args)
+        return count / times_called
+    return average
     # END PROBLEM 8
 
 
@@ -254,8 +260,19 @@ def max_scoring_num_rolls(dice=six_sided, times_called=1000):
     """
     # BEGIN PROBLEM 9
     "*** YOUR CODE HERE ***"
+    max_index = 0
+    max_avg = 0
+    for i in range(1, 11):
+        avg = make_averaged(roll_dice, times_called)(i, dice)
+        if avg > max_avg:
+            max_avg = avg
+            max_index = i
+        # print(f"DEBUG: i={i}, avg={avg}")
+    return max_index
     # END PROBLEM 9
-
+'''
+Don't forget "sow sad" in roll_dice() !!!
+'''
 
 def winner(strategy0, strategy1):
     """Return 0 if strategy0 wins against strategy1, and 1 otherwise."""
@@ -298,6 +315,8 @@ def boar_strategy(score, opponent_score, threshold=11, num_rolls=6):
     points, and returns NUM_ROLLS otherwise. Ignore score and Sus Fuss.
     """
     # BEGIN PROBLEM 10
+    if boar_brawl(score, opponent_score) >= threshold:
+        return 0
     return num_rolls  # Remove this line once implemented.
     # END PROBLEM 10
 
@@ -305,6 +324,8 @@ def boar_strategy(score, opponent_score, threshold=11, num_rolls=6):
 def sus_strategy(score, opponent_score, threshold=11, num_rolls=6):
     """This strategy returns 0 dice when your score would increase by at least threshold."""
     # BEGIN PROBLEM 11
+    if sus_update(0, score, opponent_score) - score >= threshold:
+        return 0
     return num_rolls  # Remove this line once implemented.
     # END PROBLEM 11
 
@@ -315,6 +336,10 @@ def final_strategy(score, opponent_score):
     *** YOUR DESCRIPTION HERE ***
     """
     # BEGIN PROBLEM 12
+    if boar_brawl(score, opponent_score) + score >= 100:
+        return 0
+    if sus_update(0, score, opponent_score) - score > 8:
+        return 0
     return 6  # Remove this line once implemented.
     # END PROBLEM 12
 
