@@ -128,6 +128,16 @@ def count_dollars(total):
     True
     """
     "*** YOUR CODE HERE ***"
+    def change_way(rest, bill=100):
+        if rest == 0:
+            return 1
+        elif rest < 0:
+            return 0
+        elif not bill:
+            return 0
+        else:
+            return change_way(rest - bill, bill) + change_way(rest, next_smaller_dollar(bill))
+    return change_way(total)
 
 
 def next_larger_dollar(bill):
@@ -164,6 +174,15 @@ def count_dollars_upward(total):
     True
     """
     "*** YOUR CODE HERE ***"
+    def change_way(rest, bill):
+        if rest == 0:
+            return 1
+        elif rest < 0:
+            return 0
+        elif not bill:
+            return 0
+        return change_way(rest - bill, bill) + change_way(rest, next_larger_dollar(bill))
+    return change_way(total, 1)
 
 
 def print_move(origin, destination):
@@ -199,6 +218,17 @@ def move_stack(n, start, end):
     """
     assert 1 <= start <= 3 and 1 <= end <= 3 and start != end, "Bad start/end"
     "*** YOUR CODE HERE ***"
+    middle = 6 - start - end
+    if n == 1:
+        print_move(start, end)
+#   elif n == 2:
+#       print_move(start, middle)
+#       print_move(start, end)
+#       print_move(middle, end)
+    else:
+        move_stack(n-1, start, middle)
+        move_stack(1, start, end)
+        move_stack(n-1, middle, end)
 
 
 from operator import sub, mul
@@ -214,5 +244,10 @@ def make_anonymous_factorial():
     ...     ['Assign', 'AnnAssign', 'AugAssign', 'NamedExpr', 'FunctionDef', 'Recursion'])
     True
     """
-    return 'YOUR_EXPRESSION_HERE'
+    return lambda n: 1 if n == 1 else mul(n, make_anonymous_factorial()(sub(n, 1)))
 
+# Fail to solve without recursion
+# Answer:
+# return (lambda f: lambda k: f(f, k))(lambda f, k: k if k == 1 else mul(k, f(f, sub(k, 1))))
+# Alternate solution:
+# return (lambda f: f(f))(lambda f: lambda x: 1 if x == 0 else x * f(f)(x - 1))
