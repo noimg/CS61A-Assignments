@@ -50,6 +50,10 @@ class VendingMachine:
     def __init__(self, product, price):
         """Set the product and its price, as well as other instance attributes."""
         "*** YOUR CODE HERE ***"
+        self.product = product
+        self.price = price
+        self.stock = 0
+        self.balance = 0
 
     def restock(self, n):
         """Add n to the stock and return a message about the updated stock level.
@@ -57,6 +61,8 @@ class VendingMachine:
         E.g., Current candy stock: 3
         """
         "*** YOUR CODE HERE ***"
+        self.stock += n
+        return f'Current {self.product} stock: {self.stock}'
 
     def add_funds(self, n):
         """If the machine is out of stock, return a message informing the user to restock
@@ -69,6 +75,10 @@ class VendingMachine:
         E.g., Current balance: $4
         """
         "*** YOUR CODE HERE ***"
+        if not self.stock:
+            return f'Nothing left to vend. Please restock. Here is your ${n}.'
+        self.balance += n
+        return f'Current balance: ${self.balance}'
 
     def vend(self):
         """Dispense the product if there is sufficient stock and funds and
@@ -82,6 +92,19 @@ class VendingMachine:
               Please add $3 more funds.
         """
         "*** YOUR CODE HERE ***"
+        diff = self.balance - self.price
+        if not self.stock:
+            return f'Nothing left to vend. Please restock.'
+        elif diff < 0:
+            return f'Please add ${-diff} more funds.'
+        elif diff == 0:
+            self.stock -= 1
+            self.balance = 0
+            return f'Here is your {self.product}.'
+        else:
+            self.stock -= 1
+            self.balance = 0
+            return f'Here is your {self.product} and ${diff} change.'
 
 
 def store_digits(n):
